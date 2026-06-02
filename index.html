@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevEspectro — Do código raiz ao lowcode</title>
+  <meta name="description" content="Aprenda desenvolvimento do jeito certo — o espectro completo do dev. Infoprodutos práticos para quem quer evoluir de verdade.">
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: #0F172A;
+      color: #F8FAFC;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* ── Tokens ── */
+    :root {
+      --brand:      #F97316;
+      --brand-dark: #C2410C;
+      --dark:       #0F172A;
+      --dark-2:     #1E293B;
+      --dark-3:     #334155;
+      --muted:      #94A3B8;
+      --light:      #F8FAFC;
+      --mono:       'ui-monospace', 'Cascadia Code', Menlo, Consolas, monospace;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+    .section    { padding: 96px 24px; }
+    .section-alt { padding: 96px 24px; background: var(--dark-2); }
+    .label {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 12px;
+    }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(15,23,42,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--dark-3);
+    }
+    .nav-inner {
+      max-width: 1000px; margin: 0 auto; padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--mono); font-weight: 700; font-size: 18px;
+    }
+    .logo span.orange { color: var(--brand); }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; color: var(--muted); transition: color .2s; }
+    .nav-links a:hover { color: var(--light); }
+    .btn-nav {
+      background: var(--brand); color: #fff !important;
+      padding: 8px 20px; border-radius: 8px;
+      font-weight: 600; font-size: 14px !important;
+      transition: background .2s !important;
+    }
+    .btn-nav:hover { background: var(--brand-dark) !important; }
+
+    /* ── Botões ── */
+    .btn-primary {
+      display: inline-block;
+      background: var(--brand); color: #fff;
+      padding: 14px 32px; border-radius: 12px;
+      font-weight: 700; font-size: 17px;
+      transition: background .2s;
+    }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .btn-secondary {
+      display: inline-block;
+      border: 1px solid var(--dark-3); color: var(--muted);
+      padding: 14px 32px; border-radius: 12px;
+      font-weight: 600; font-size: 17px;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); color: var(--light); }
+    .btn-group { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+    .spectrum-bars {
+      display: flex; align-items: flex-end; gap: 6px;
+      margin-bottom: 40px;
+    }
+    .bar {
+      width: 16px; border-radius: 4px;
+      animation: pulse 2s ease-in-out infinite alternate;
+    }
+    @keyframes pulse { from { opacity: .65; } to { opacity: 1; } }
+    .hero-eyebrow { font-family: var(--mono); font-size: 13px; letter-spacing: .15em; text-transform: uppercase; color: var(--brand); margin-bottom: 20px; }
+    h1 { font-size: clamp(32px, 6vw, 58px); font-weight: 800; line-height: 1.15; margin-bottom: 24px; }
+    .gradient-text {
+      background: linear-gradient(120deg, #F8FAFC 0%, #F97316 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub { font-size: 18px; color: var(--muted); max-width: 600px; margin: 0 auto 40px; }
+    .hero-note { margin-top: 48px; font-size: 14px; color: var(--muted); }
+    .hero-note .mono-tag { font-family: var(--mono); color: var(--brand); }
+
+    /* ── Sobre ── */
+    #sobre h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 700; margin-bottom: 48px; max-width: 560px; }
+    .sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+    .sobre-text p { color: var(--muted); font-size: 17px; line-height: 1.8; margin-bottom: 20px; }
+    .value-cards { display: flex; flex-direction: column; gap: 16px; }
+    .value-card {
+      background: var(--dark);
+      border: 1px solid var(--dark-3);
+      border-radius: 14px; padding: 20px 24px;
+    }
+    .value-card .card-title { font-family: var(--mono); color: var(--brand); font-weight: 700; margin-bottom: 6px; }
+    .value-card p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    /* ── Produto ── */
+    #produto h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 700; margin-bottom: 8px; }
+    #produto .sub { color: var(--muted); font-size: 17px; margin-bottom: 64px; max-width: 560px; }
+    .produto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .kit-card {
+      background: var(--dark-2);
+      border: 1px solid var(--dark-3);
+      border-radius: 20px; overflow: hidden;
+    }
+    .kit-card-header {
+      background: var(--dark);
+      padding: 32px; border-bottom: 1px solid var(--dark-3);
+    }
+    .kit-card-header .mini-bars { display: flex; align-items: flex-end; gap: 4px; margin-bottom: 20px; }
+    .kit-card-header .mini-bar { width: 10px; border-radius: 3px; }
+    .kit-label { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .kit-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .kit-edition { font-size: 13px; color: var(--muted); }
+    .kit-card-body { padding: 28px 32px; }
+    .kit-section-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 16px; }
+    .kit-includes { display: flex; flex-direction: column; gap: 10px; }
+    .kit-includes li { display: flex; gap: 12px; font-size: 14px; color: var(--muted); }
+    .kit-includes li .check { color: var(--brand); flex-shrink: 0; margin-top: 1px; }
+
+    .modulos-list { display: flex; flex-direction: column; }
+    .modulo-row {
+      display: flex; gap: 16px; padding: 10px 0;
+      border-bottom: 1px solid var(--dark-3);
+    }
+    .modulo-row:last-child { border-bottom: none; }
+    .modulo-num { font-family: var(--mono); font-size: 13px; color: var(--brand); width: 72px; flex-shrink: 0; }
+    .modulo-name { font-size: 14px; color: var(--muted); }
+
+    /* ── CTA ── */
+    #comprar { text-align: center; }
+    #comprar h2 { font-size: clamp(26px, 4vw, 38px); font-weight: 700; margin-bottom: 12px; }
+    #comprar .sub { color: var(--muted); font-size: 17px; margin-bottom: 48px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .price-card {
+      max-width: 480px; margin: 0 auto 32px;
+      background: var(--dark);
+      border: 1px solid rgba(249,115,22,.35);
+      border-radius: 20px; padding: 48px 40px;
+    }
+    .price-label { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+    .price-value { display: flex; align-items: baseline; justify-content: center; gap: 4px; margin-bottom: 32px; }
+    .price-currency { font-size: 22px; color: var(--muted); }
+    .price-number { font-size: 64px; font-weight: 800; line-height: 1; }
+    .price-cents { font-size: 22px; color: var(--muted); }
+    .btn-buy {
+      display: block; width: 100%;
+      background: var(--brand); color: #fff;
+      padding: 16px; border-radius: 12px;
+      font-weight: 700; font-size: 18px;
+      text-align: center; margin-bottom: 14px;
+      transition: background .2s;
+    }
+    .btn-buy:hover { background: var(--brand-dark); }
+    .price-note { font-size: 13px; color: var(--muted); }
+    .contact-note { font-size: 14px; color: var(--muted); }
+    .contact-note a { color: var(--brand); }
+    .contact-note a:hover { text-decoration: underline; }
+
+    /* ── FAQ ── */
+    #faq h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 700; margin-bottom: 48px; }
+    .faq-list { max-width: 720px; display: flex; flex-direction: column; gap: 12px; }
+    details {
+      border: 1px solid var(--dark-3);
+      border-radius: 14px; overflow: hidden;
+    }
+    summary {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 24px; cursor: pointer; list-style: none;
+      font-weight: 600; font-size: 16px;
+      transition: background .15s;
+    }
+    summary:hover { background: var(--dark-2); }
+    summary::-webkit-details-marker { display: none; }
+    .faq-icon { color: var(--brand); font-size: 22px; font-weight: 300; transition: transform .2s; flex-shrink: 0; margin-left: 16px; }
+    details[open] .faq-icon { transform: rotate(45deg); }
+    .faq-answer { padding: 0 24px 22px; color: var(--muted); font-size: 15px; line-height: 1.8; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 48px 24px;
+      border-top: 1px solid var(--dark-3);
+    }
+    .footer-inner {
+      max-width: 1000px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { font-family: var(--mono); font-weight: 700; font-size: 17px; }
+    .footer-logo span { color: var(--brand); }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+    .footer-email { font-size: 13px; color: var(--muted); transition: color .2s; }
+    .footer-email:hover { color: var(--brand); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .sobre-grid, .produto-grid { grid-template-columns: 1fr; gap: 40px; }
+      .btn-group { flex-direction: column; align-items: center; }
+      .footer-inner { justify-content: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAVBAR ════════════════════════════════════════════════════════════ -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <rect width="28" height="28" rx="6" fill="#0F172A"/>
+          <rect x="3"  y="20" width="3" height="5"  rx="1" fill="#8B5CF6"/>
+          <rect x="7"  y="17" width="3" height="8"  rx="1" fill="#3B82F6"/>
+          <rect x="11" y="13" width="3" height="12" rx="1" fill="#06B6D4"/>
+          <rect x="15" y="10" width="3" height="15" rx="1" fill="#10B981"/>
+          <rect x="19" y="14" width="3" height="11" rx="1" fill="#F59E0B"/>
+          <rect x="23" y="17" width="3" height="8"  rx="1" fill="#F97316"/>
+        </svg>
+        Dev<span class="orange">Espectro</span>
+      </a>
+      <div class="nav-links">
+        <a href="#sobre">Sobre</a>
+        <a href="#produto">Kit JS</a>
+        <a href="#faq">FAQ</a>
+        <a href="#comprar" class="btn-nav">Quero o Kit</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+  <section id="hero">
+    <div class="spectrum-bars" aria-hidden="true">
+      <div class="bar" style="height:32px;  background:#8B5CF6; animation-delay:0s"></div>
+      <div class="bar" style="height:48px;  background:#6366F1; animation-delay:.1s"></div>
+      <div class="bar" style="height:64px;  background:#3B82F6; animation-delay:.2s"></div>
+      <div class="bar" style="height:88px;  background:#06B6D4; animation-delay:.3s"></div>
+      <div class="bar" style="height:72px;  background:#10B981; animation-delay:.2s"></div>
+      <div class="bar" style="height:52px;  background:#F59E0B; animation-delay:.1s"></div>
+      <div class="bar" style="height:36px;  background:#F97316; animation-delay:0s"></div>
+    </div>
+
+    <p class="hero-eyebrow">o espectro completo do dev</p>
+
+    <h1>
+      <span class="gradient-text">Aprenda desenvolvimento</span><br>
+      do jeito que funciona de verdade
+    </h1>
+
+    <p class="hero-sub">
+      Frontend, backend, dados, DevOps — o DevEspectro cobre cada
+      disciplina com profundidade e sem enrolação. Um produto por vez,
+      cada um do jeito certo.
+    </p>
+
+    <div class="btn-group">
+      <a href="#produto" class="btn-primary">Ver o Kit JavaScript →</a>
+      <a href="#sobre"   class="btn-secondary">Conhecer o projeto</a>
+    </div>
+
+    <p class="hero-note">
+      Conteúdo criado por um desenvolvedor, para desenvolvedores.
+      <span class="mono-tag">{ sem papo de professor }</span>
+    </p>
+  </section>
+
+  <!-- ══ SOBRE ═════════════════════════════════════════════════════════════ -->
+  <section id="sobre" class="section-alt">
+    <div class="container">
+      <p class="label">sobre o projeto</p>
+      <h2>Por que o DevEspectro existe?</h2>
+
+      <div class="sobre-grid">
+        <div class="sobre-text">
+          <p>
+            O desenvolvimento tem muitas faces — frontend, backend, dados,
+            DevOps, mobile. A maioria dos cursos cobre um pedaço e ignora
+            o resto. O DevEspectro cobre o espectro inteiro.
+          </p>
+          <p>
+            Cada produto é focado numa disciplina, construído com profundidade
+            e com um objetivo claro: você sai sabendo fazer, não só sabendo
+            que existe.
+          </p>
+          <p>
+            Sem enrolação, sem teoria desnecessária. Só o que você precisa
+            para construir coisas de verdade — em qualquer stack.
+          </p>
+        </div>
+
+        <div class="value-cards">
+          <div class="value-card">
+            <div class="card-title">{ } Frontend & Backend</div>
+            <p>JavaScript, TypeScript, Node, React, APIs — a base que sustenta qualquer produto digital moderno.</p>
+          </div>
+          <div class="value-card">
+            <div class="card-title">📊 Dados & DevOps</div>
+            <p>Ciência de dados, automação e infraestrutura — o lado que faz o produto funcionar em escala.</p>
+          </div>
+          <div class="value-card">
+            <div class="card-title">🎯 Direto ao ponto</div>
+            <p>Cada material é objetivo, prático e com exemplos reais. Você aprende fazendo, não lendo slides.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PRODUTO ═══════════════════════════════════════════════════════════ -->
+  <section id="produto" class="section">
+    <div class="container">
+      <p class="label">infoproduto</p>
+      <h2>Kit Sobrevivência JavaScript</h2>
+      <p class="sub">Do zero ao projeto real — objetivo, prático e na velocidade certa.</p>
+
+      <!-- Diferenciais -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:56px;">
+        <div style="background:var(--dark-2);border:1px solid var(--dark-3);border-top:3px solid var(--brand);border-radius:14px;padding:24px 20px;">
+          <div style="font-size:22px;margin-bottom:10px;">🧱</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">Estrutura sólida</div>
+          <p style="color:var(--muted);font-size:13px;line-height:1.7;">12 módulos progressivos, do zero ao projeto real. Cada módulo constrói sobre o anterior — sem lacunas, sem atalhos.</p>
+        </div>
+        <div style="background:var(--dark-2);border:1px solid var(--dark-3);border-top:3px solid var(--brand);border-radius:14px;padding:24px 20px;">
+          <div style="font-size:22px;margin-bottom:10px;">✅</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">Gabarito completo</div>
+          <p style="color:var(--muted);font-size:13px;line-height:1.7;">Todos os exercícios têm solução em código, explicada. Você trava, consulta, entende — e segue em frente.</p>
+        </div>
+        <div style="background:var(--dark-2);border:1px solid var(--dark-3);border-top:3px solid var(--brand);border-radius:14px;padding:24px 20px;">
+          <div style="font-size:22px;margin-bottom:10px;">🌍</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">Exemplos reais</div>
+          <p style="color:var(--muted);font-size:13px;line-height:1.7;">2 projetos práticos por módulo, aplicados em situações do dia a dia do dev — não só "olá mundo".</p>
+        </div>
+        <div style="background:var(--dark-2);border:1px solid var(--dark-3);border-top:3px solid var(--brand);border-radius:14px;padding:24px 20px;">
+          <div style="font-size:22px;margin-bottom:10px;">🧠</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">Conceito aprofundado</div>
+          <p style="color:var(--muted);font-size:13px;line-height:1.7;">Escopo, coerção, closures, event loop, truthy/falsy — você entende o porquê, não só o como.</p>
+        </div>
+      </div>
+
+      <div class="produto-grid">
+        <!-- Card do produto -->
+        <div class="kit-card">
+          <div class="kit-card-header">
+            <div class="mini-bars">
+              <div class="mini-bar" style="height:24px; background:#8B5CF6"></div>
+              <div class="mini-bar" style="height:36px; background:#3B82F6"></div>
+              <div class="mini-bar" style="height:52px; background:#06B6D4"></div>
+              <div class="mini-bar" style="height:40px; background:#10B981"></div>
+              <div class="mini-bar" style="height:28px; background:#F97316"></div>
+            </div>
+            <div class="kit-label">DevEspectro</div>
+            <div class="kit-name">Kit Sobrevivência JavaScript</div>
+            <div class="kit-edition">Edição digital 2026</div>
+          </div>
+          <div class="kit-card-body">
+            <div class="kit-section-label">por que este kit é diferente</div>
+            <ul class="kit-includes">
+              <li><span class="check">✓</span> <strong>Estrutura sólida</strong> — 12 módulos progressivos, do zero ao projeto real, sem pular etapas</li>
+              <li><span class="check">✓</span> <strong>Gabarito completo</strong> — cada exercício tem solução em código, com explicação</li>
+              <li><span class="check">✓</span> <strong>Exemplos reais</strong> — 2 projetos práticos por módulo, aplicados no mundo real</li>
+              <li><span class="check">✓</span> <strong>Conteúdo conceitual aprofundado</strong> — não só sintaxe: escopo, coerção, closures, event loop e muito mais</li>
+              <li><span class="check">✓</span> Bônus: checklist do dev iniciante</li>
+              <li><span class="check">✓</span> PDF para qualquer dispositivo, sem DRM</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Módulos -->
+        <div>
+          <div class="kit-section-label">conteúdo do kit</div>
+          <div class="modulos-list">
+            <div class="modulo-row"><span class="modulo-num">Módulo 1</span><span class="modulo-name">JavaScript de verdade começa aqui</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 2</span><span class="modulo-name">Ambiente de Desenvolvimento</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 3</span><span class="modulo-name">Os blocos de construção</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 4</span><span class="modulo-name">Fazendo o código tomar decisões</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 5</span><span class="modulo-name">Repetição sem enlouquecer</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 6</span><span class="modulo-name">Funções: o coração do JS</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 7</span><span class="modulo-name">Arrays: o básico que você precisa dominar</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 8</span><span class="modulo-name">Arrays: métodos poderosos</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 9</span><span class="modulo-name">Objetos e ES6+ moderno</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 10</span><span class="modulo-name">DOM: JS que mexe na página</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 11</span><span class="modulo-name">Async/Await: código que espera</span></div>
+            <div class="modulo-row"><span class="modulo-num">Módulo 12</span><span class="modulo-name">Seus primeiros projetos reais</span></div>
+            <div class="modulo-row"><span class="modulo-num">Bônus</span><span class="modulo-name">Checklist do Dev Iniciante</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA ═══════════════════════════════════════════════════════════════ -->
+  <section id="comprar" class="section-alt">
+    <div class="container">
+      <p class="label">comece agora</p>
+      <h2>Pronto para sair do zero?</h2>
+      <p class="sub">Um pagamento, acesso para sempre. Sem assinatura, sem mensalidade. Estude no seu ritmo.</p>
+
+      <div class="price-card">
+        <p class="price-label">Kit Sobrevivência JavaScript</p>
+        <div class="price-value">
+          <span class="price-currency">R$</span>
+          <span class="price-number">19</span>
+          <span class="price-cents">,90</span>
+        </div>
+        <a href="#" class="btn-buy">Comprar agora →</a>
+        <p class="price-note">Pagamento seguro via Hotmart · PDF enviado imediatamente</p>
+      </div>
+
+      <p class="contact-note">
+        Dúvidas? Fale com a gente em
+        <a href="mailto:oi@devespectro.dev">oi@devespectro.dev</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ FAQ ═══════════════════════════════════════════════════════════════ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <p class="label">dúvidas frequentes</p>
+      <h2>FAQ</h2>
+
+      <div class="faq-list">
+        <details>
+          <summary>
+            Preciso ter experiência prévia em programação?
+            <span class="faq-icon">+</span>
+          </summary>
+          <p class="faq-answer">
+            Não. O kit começa do zero absoluto — o Módulo 1 explica o que é JavaScript
+            e como rodar seu primeiro código. Se você sabe usar um computador, já é o suficiente.
+          </p>
+        </details>
+
+        <details>
+          <summary>
+            O kit é um PDF ou um curso em vídeo?
+            <span class="faq-icon">+</span>
+          </summary>
+          <p class="faq-answer">
+            É um livro digital em PDF — completo, com código, exercícios e gabarito.
+            A vantagem é que você lê no seu ritmo, sem depender de plataforma de vídeo.
+          </p>
+        </details>
+
+        <details>
+          <summary>
+            Qual sistema operacional é necessário?
+            <span class="faq-icon">+</span>
+          </summary>
+          <p class="faq-answer">
+            Qualquer um — Windows, Mac ou Linux. O kit ensina a instalar o VS Code
+            e o Node.js nos três sistemas. Você precisa só de um computador com acesso à internet.
+          </p>
+        </details>
+
+        <details>
+          <summary>
+            Vou conseguir criar projetos reais ao terminar?
+            <span class="faq-icon">+</span>
+          </summary>
+          <p class="faq-answer">
+            Sim. O Módulo 12 é dedicado aos seus primeiros projetos reais, e o kit termina
+            com um roteiro claro do que estudar depois — React, Node, TypeScript — para
+            continuar evoluindo.
+          </p>
+        </details>
+
+        <details>
+          <summary>
+            O acesso expira?
+            <span class="faq-icon">+</span>
+          </summary>
+          <p class="faq-answer">
+            Não. É um pagamento único e o PDF é seu para sempre. Baixe e guarde
+            onde quiser — sem plataforma de streaming, sem dependência de login.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ════════════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Dev<span>Espectro</span></div>
+      <p class="footer-copy">© 2026 DevEspectro. Todos os direitos reservados.</p>
+      <a href="mailto:oi@devespectro.dev" class="footer-email">oi@devespectro.dev</a>
+    </div>
+  </footer>
+
+</body>
+</html>
